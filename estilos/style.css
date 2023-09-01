@@ -19,25 +19,46 @@ section {
     flex-direction: column;
     border-radius: 10px;
     background-color: #E4E4D0;
-    width: 300px;
-    height: 350px;
+    width: 250px;
+    height: 400px;
     text-align: center;
+    gap: 1em;
 }
 
 .visor-calculadora {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2em;
     background-color: #ffffff;
-    border-radius: 10px;
     height: 10vh;
     text-align: right;
+    overflow-wrap: break-word;
+    padding: .2em;
+    min-height: 1.6em;
 }
 
 .corpo-calculadora {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
+    gap: 3px;
+    padding: 3px;
+
 }
 
 .botoes {
-    width: 100%;
-    height: 5vh;
+    background-color: #F3F3F3;
+    border: 1px solid transparent;
+    border-radius: 0;
+    height: 3em;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.botoes:hover {
+    color: #ccc;
+    border-color: #999;
+}
+
+#botao-igual {
+    grid-column: span 2;
 }
