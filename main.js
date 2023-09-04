@@ -19,18 +19,30 @@ class Calculator {
     }
 
     processOperation(operation) {
+
         let operationValue;
-        const calculoAtual = this.calculoTexto.innerText;
-        const resultadoAtual = this.resultadoTexto.innerText;
+
+        let calculoAtual = parseFloat(this.calculoTexto.innerText);
+        let resultadoAtual = parseFloat(this.resultadoTexto.innerText);
 
         switch(operation) {
             case "+":
-                operationValue = calculoAtual + resultadoAtual;
-                this.updateScreen(operationValue, operation, resultadoAtual, calculoAtual)
+                operationValue = parseFloat(calculoAtual) + parseFloat(resultadoAtual);
             break;
-            default:
+            case "-":
+                operationValue = parseFloat(calculoAtual) - parseFloat(resultadoAtual)
+            break;
+            case "/":
+                operationValue = parseFloat(calculoAtual) / parseFloat(resultadoAtual)
+            break;
+            case "*":
+                operationValue = parseFloat(calculoAtual) * parseFloat(resultadoAtual)
+            break;
+                default:
                 return;
+               
         }
+        this.updateScreen(operationValue, operation, resultadoAtual, calculoAtual)
     }
 
     updateScreen(operationValue = null, operation = null, calculoAtual = null, resultadoAtual = null) {
@@ -38,12 +50,21 @@ class Calculator {
         
         if(operationValue === null) {
             this.calculoTexto.innerText = this.calculo //Atualiza a área de cálculo
+        } else {
+            this.resultadoTexto.innerText = operationValue
         }
-    }
+    }   
 }
 
 const calc = new Calculator(calculoTexto, resultadoTexto);
 
+
+// Limpa a expressão de cálculo em andamento e o resultado
+function clearScreen() {
+    calc.calculo = "";
+    calc.resultadoTexto.innerText = "0";
+    calc.calculoTexto.innerText = "0";
+}
 
 botoes.forEach(botao => {
     const acao = botao.dataset.acao
@@ -53,6 +74,8 @@ botoes.forEach(botao => {
 
         if (+value >= 0 || value === ".") {
             calc.addDigit(value);
+        } else if (value === "CE") {
+            clearScreen();
         } else {
             calc.processOperation(value)
         }
