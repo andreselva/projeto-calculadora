@@ -19,11 +19,26 @@ class Calculator {
     }
 
     processOperation(operation) {
-        console.log(operation);
+        let operationValue;
+        const calculoAtual = this.calculoTexto.innerText;
+        const resultadoAtual = this.resultadoTexto.innerText;
+
+        switch(operation) {
+            case "+":
+                operationValue = calculoAtual + resultadoAtual;
+                this.updateScreen(operationValue, operation, resultadoAtual, calculoAtual)
+            break;
+            default:
+                return;
+        }
     }
 
-    updateScreen() {
-        this.calculoTexto.innerText = this.calculo //Atualiza a área de cálculo
+    updateScreen(operationValue = null, operation = null, calculoAtual = null, resultadoAtual = null) {
+        console.log(operationValue, operation, resultadoAtual, calculoAtual)
+        
+        if(operationValue === null) {
+            this.calculoTexto.innerText = this.calculo //Atualiza a área de cálculo
+        }
     }
 }
 
