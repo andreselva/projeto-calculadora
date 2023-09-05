@@ -19,6 +19,12 @@ class Calculator {
     }
 
     processOperation(operation) {
+        if (this.currentOperationText.innerText === "") {
+            if (previousOperationText.innerText !== "") {
+                this.changeOperation(operation);
+            }
+            return
+        }
 
         let operationValue;
         let previous = +this.previousOperationText.innerText.split(" ")[0];
@@ -26,21 +32,33 @@ class Calculator {
         switch (operation) {
             case "+":
                 operationValue = previous + current;
+                this.updateScreen(operationValue, operation, previous, current)
                 break;
             case "-":
                 operationValue = previous - current;
+                this.updateScreen(operationValue, operation, previous, current)
                 break;
             case "/":
                 operationValue = previous / current;
+                this.updateScreen(operationValue, operation, previous, current)
                 break;
             case "*":
                 operationValue = previous * current;
+                this.updateScreen(operationValue, operation, previous, current)
+                break;
+            case "DEL":
+                this.processDelOperation();
+                break;
+            case "CE":
+                this.processClearCurrentOperation();
+                break;
+            case "C":
+                this.processClearAllOperation();
                 break;
             default:
                 return;
 
         }
-        this.updateScreen(operationValue, operation, previous, current)
     }
 
     updateScreen(
@@ -49,6 +67,7 @@ class Calculator {
         current = null,
         previous = null
     ) {
+        console.log(operationValue, operation, current, previous)
         if (operationValue === null) {
             this.currentOperationText.innerText += this.currentOperation; //Atualiza a área de cálculo
         } else {
@@ -60,29 +79,48 @@ class Calculator {
             this.currentOperationText.innerText = "";
         }
     }
+
+    changeOperation(operation) {
+        const mathOperations = ["-", "+", "*", "/"]
+
+        // Verifica se os sinais já estão inseridos na operação
+        if (!mathOperations.includes(operation)) {
+            return
+        }
+
+        // O SLICE realiza a troca de sinal na operação
+        this.previousOperationText.innerText = this.previousOperationText.innerText.slice(0, -1) + operation
+    }
+
+    // Apaga o último dígito
+    processDelOperation() {
+        this.currentOperationText.innerText = this.currentOperationText.innerText.slice(0, -1);
+    }
+
+    //Apaga a próxima operação (visor de baixo)
+    processClearCurrentOperation() {
+        this.currentOperationText.innerText = ""
+    }
+
+    processClearAllOperation() {
+        this.currentOperationText.innerText = ""
+        this.previousOperationText.innerText = "0"
+    }
 }
 
 const calc = new Calculator(previousOperationText, currentOperationText);
 
 
 // Limpa a expressão de cálculo em andamento e o resultado
-function clearScreen() {
-    calc.currentOperation = ""; // Limpa o cálculo em andamento
-    calc.currentOperationText.innerText = ""
-    calc.previousOperationText.innerText = "0"; // Define o texto atual como "0"
-}
 
 
 buttons.forEach(botao => {
-    const acao = botao.dataset.acao
     botao.addEventListener("click", (e) => {
 
         const value = e.target.innerText; //RECEBE VALOR DE TEXTO DOS BOTÕES
 
         if (+value >= 0 || value === ".") {
             calc.addDigit(value);
-        } else if (value === "CE") {
-            clearScreen()
         } else {
             calc.processOperation(value)
         }
