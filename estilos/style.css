@@ -45,7 +45,7 @@ section {
 
 }
 
-.botoes {
+button {
     background-color: #F3F3F3;
     border: 1px solid transparent;
     border-radius: 0;
@@ -54,11 +54,11 @@ section {
     cursor: pointer;
 }
 
-.botoes:hover {
+button:hover {
     color: #ccc;
     border-color: #999;
 }
 
-#botao-igual {
+#equal-btn {
     grid-column: span 2;
 }

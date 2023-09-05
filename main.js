@@ -1,72 +1,79 @@
-const calculoTexto = document.querySelector("#calculoTexto");
-const resultadoTexto = document.querySelector("#resultadoTexto");
-const botoes = document.querySelectorAll("button");
+const previousOperationText = document.querySelector("#previous-operation");
+const currentOperationText = document.querySelector("#current-operation");
+const buttons = document.querySelectorAll("button");
 
 class Calculator {
-    constructor(calculoTexto, resultadoTexto) {
-        this.calculoTexto = calculoTexto;
-        this.resultadoTexto = resultadoTexto;
-        this.calculo = ""; //Representará o cálculo em andamento
+    constructor(previousOperationText, currentOperationText) {
+        this.previousOperationText = previousOperationText;
+        this.currentOperationText = currentOperationText;
+        this.currentOperation = ""; //Representará o cálculo em andamento
     }
 
     //Adiciona um digito
     addDigit(digit) {
-        if (digit === "." && this.calculoTexto.innerText.includes(".")) { //Controla a inserção do ponto no cálculo
+        if (digit === "." && this.currentOperationText.innerText.includes(".")) { //Controla a inserção do ponto no cálculo
             return;
         }
-        this.calculo += digit; //Concatena o digito ao cálculo em andamento
+        this.currentOperation = digit; //Concatena o digito ao cálculo em andamento
         this.updateScreen();
     }
 
     processOperation(operation) {
 
         let operationValue;
-
-        let calculoAtual = parseFloat(this.calculoTexto.innerText);
-        let resultadoAtual = parseFloat(this.resultadoTexto.innerText);
-
-        switch(operation) {
+        let previous = +this.previousOperationText.innerText.split(" ")[0];
+        let current = +this.currentOperationText.innerText;
+        switch (operation) {
             case "+":
-                operationValue = parseFloat(calculoAtual) + parseFloat(resultadoAtual);
-            break;
+                operationValue = previous + current;
+                break;
             case "-":
-                operationValue = parseFloat(calculoAtual) - parseFloat(resultadoAtual)
-            break;
+                operationValue = previous - current;
+                break;
             case "/":
-                operationValue = parseFloat(calculoAtual) / parseFloat(resultadoAtual)
-            break;
+                operationValue = previous / current;
+                break;
             case "*":
-                operationValue = parseFloat(calculoAtual) * parseFloat(resultadoAtual)
-            break;
-                default:
+                operationValue = previous * current;
+                break;
+            default:
                 return;
-               
+
         }
-        this.updateScreen(operationValue, operation, resultadoAtual, calculoAtual)
+        this.updateScreen(operationValue, operation, previous, current)
     }
 
-    updateScreen(operationValue = null, operation = null, calculoAtual = null, resultadoAtual = null) {
-        console.log(operationValue, operation, resultadoAtual, calculoAtual)
-        
-        if(operationValue === null) {
-            this.calculoTexto.innerText = this.calculo //Atualiza a área de cálculo
+    updateScreen(
+        operationValue = null,
+        operation = null,
+        current = null,
+        previous = null
+    ) {
+        if (operationValue === null) {
+            this.currentOperationText.innerText += this.currentOperation; //Atualiza a área de cálculo
         } else {
-            this.resultadoTexto.innerText = operationValue
+            if (previous === 0) {
+                operationValue = current;
+            }
+
+            this.previousOperationText.innerText = `${operationValue} ${operation}`;
+            this.currentOperationText.innerText = "";
         }
-    }   
+    }
 }
 
-const calc = new Calculator(calculoTexto, resultadoTexto);
+const calc = new Calculator(previousOperationText, currentOperationText);
 
 
 // Limpa a expressão de cálculo em andamento e o resultado
 function clearScreen() {
-    calc.calculo = "";
-    calc.resultadoTexto.innerText = "0";
-    calc.calculoTexto.innerText = "0";
+    calc.currentOperation = ""; // Limpa o cálculo em andamento
+    calc.currentOperationText.innerText = ""
+    calc.previousOperationText.innerText = "0"; // Define o texto atual como "0"
 }
 
-botoes.forEach(botao => {
+
+buttons.forEach(botao => {
     const acao = botao.dataset.acao
     botao.addEventListener("click", (e) => {
 
@@ -75,7 +82,7 @@ botoes.forEach(botao => {
         if (+value >= 0 || value === ".") {
             calc.addDigit(value);
         } else if (value === "CE") {
-            clearScreen();
+            clearScreen()
         } else {
             calc.processOperation(value)
         }
