@@ -17,9 +17,9 @@ class Calculator {
         this.currentOperation = digit; //Concatena o digito ao cálculo em andamento
         this.updateScreen();
     }
-
+    // Controla a operação
     processOperation(operation) {
-        if (this.currentOperationText.innerText === "") {
+        if (this.currentOperationText.innerText === "" && operation !== "C") {
             if (previousOperationText.innerText !== "") {
                 this.changeOperation(operation);
             }
@@ -32,20 +32,20 @@ class Calculator {
         switch (operation) {
             case "+":
                 operationValue = previous + current;
-                this.updateScreen(operationValue, operation, previous, current)
+                this.updateScreen(operationValue, operation, current, previous)
                 break;
             case "-":
                 operationValue = previous - current;
-                this.updateScreen(operationValue, operation, previous, current)
+                this.updateScreen(operationValue, operation, current, previous)
                 break;
             case "/":
                 operationValue = previous / current;
-                this.updateScreen(operationValue, operation, previous, current)
+                this.updateScreen(operationValue, operation, current, previous)
                 break;
             case "*":
                 operationValue = previous * current;
-                this.updateScreen(operationValue, operation, previous, current)
-                break;
+                this.updateScreen(operationValue, operation, current, previous)
+                break; 
             case "DEL":
                 this.processDelOperation();
                 break;
@@ -54,6 +54,9 @@ class Calculator {
                 break;
             case "C":
                 this.processClearAllOperation();
+                break;
+            case "=":
+                this.processEqualsOperation();
                 break;
             default:
                 return;
@@ -103,15 +106,18 @@ class Calculator {
     }
 
     processClearAllOperation() {
-        this.currentOperationText.innerText = ""
-        this.previousOperationText.innerText = "0"
+        this.currentOperationText.innerText = "";
+        this.previousOperationText.innerText = "";
+        this.currentOperation = "";
+    }
+
+    processEqualsOperation() {
+        const operation = previousOperationText.innerText.split(" ")[1];
+        this.processOperation(operation);
     }
 }
 
 const calc = new Calculator(previousOperationText, currentOperationText);
-
-
-// Limpa a expressão de cálculo em andamento e o resultado
 
 
 buttons.forEach(botao => {
